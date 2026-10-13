@@ -1,6 +1,5 @@
 #include "Public/Mappings.h"
 
-static const wchar_t* GameModuleName = L"UnrealEditorFortnite-Win64-Shipping.exe";
 static const wchar_t* EngineModuleName = L"UnrealEditorFortnite-Engine-Win64-Shipping.dll";
 static const wchar_t* CommonModuleName = L"UnrealEditorFortnite-Common-Win64-Shipping.dll";
 
@@ -32,8 +31,6 @@ int main(int argc, char** argv)
 
 	//needs to be set to be able to load imports
 	std::filesystem::current_path(GameFolderPath);
-
-	PE MainModule(GameModuleName);
 
 	PE EngineModule(EngineModuleName);
 	PE CommonModule(CommonModuleName);
