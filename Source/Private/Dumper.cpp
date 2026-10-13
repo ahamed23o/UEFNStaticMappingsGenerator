@@ -67,7 +67,7 @@ void Dumper::RegisterCompiledInInfo(const TCHAR* PackageName, const FClassRegist
     }
 
     for (int i = 0; i < NumEnumInfo; i++) {
-        if (StructDataMap.find(WStringToString(EnumInfo[i].Name)) != StructDataMap.end())
+        if (EnumDataMap.find(WStringToString(EnumInfo[i].Name)) != EnumDataMap.end())
             continue;
 
         EnumInfo[i].OuterRegister(0); //must be 0

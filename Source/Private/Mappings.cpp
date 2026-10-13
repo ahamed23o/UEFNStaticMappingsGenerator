@@ -190,7 +190,15 @@ void Mappings::GeneratePropertyType(Dumper::CompactPropertyData Property)
 	EMappingsTypeFlags MappingType = GetMappingType(Property);
 
 	/* Serialize ByteProperty as an EnumProperty with 'UnderlayingType == uint8' if the inner enum is valid */
-	const bool bIsFakeEnumProperty = MappingType == EMappingsTypeFlags::ByteProperty && !((byte)Property.Flags & (byte)Dumper::EPropertyGenFlags::NativeBool);
+	const char* ByteEnumName = nullptr;
+
+	if (MappingType == EMappingsTypeFlags::ByteProperty && !((byte)Property.Flags & (byte)Dumper::EPropertyGenFlags::NativeBool))
+	{
+		auto ByteEnumFunc = ((Dumper::FBytePropertyParams*)Property.RawProperty)->EnumFunc;
+		if (ByteEnumFunc)
+			ByteEnumName = (const char*)ByteEnumFunc(0); // must be 0 too like EnumProperty
+	}
+	const bool bIsFakeEnumProperty = ByteEnumName && Dumper::EnumDataMap.find(ByteEnumName) != Dumper::EnumDataMap.end();
 
 	WriteValue(GStructStream, static_cast<uint8>(!bIsFakeEnumProperty ? MappingType : EMappingsTypeFlags::EnumProperty));
 
@@ -220,7 +228,7 @@ void Mappings::GeneratePropertyType(Dumper::CompactPropertyData Property)
 	}
 	else if (bIsFakeEnumProperty)
 	{
-		WriteValue(GStructStream, GetOrAddNameIndex(Property.PropertyName));
+		WriteValue(GStructStream, GetOrAddNameIndex(ByteEnumName));
 	}
 	else if (MappingType == EMappingsTypeFlags::StructProperty)
 	{	
