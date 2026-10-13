@@ -10,6 +10,15 @@
     <Filter Include="Source\Private">
       <UniqueIdentifier>{3b5f23e4-af39-4c62-951b-0e133136f274}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Private\Compression">
+      <UniqueIdentifier>{82c4016a-9c23-4c48-9176-a7ad19c2abaa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Public\Compression">
+      <UniqueIdentifier>{d5bfb7eb-2851-4878-8fe2-f24efb4b4761}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Public\MinHook">
+      <UniqueIdentifier>{7693040e-db25-4ea5-8ad9-526d557109de}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Private\Dumper.cpp">
@@ -24,6 +33,9 @@
     <ClCompile Include="Source\Private\PE.cpp">
       <Filter>Source\Private</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Private\zstd.c">
+      <Filter>Source\Private\Compression</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Public\Utils.h">
@@ -35,16 +47,22 @@
     <ClInclude Include="Source\Public\Mappings.h">
       <Filter>Source\Public</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Public\MinHook.h">
-      <Filter>Source\Public</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Public\PE.h">
       <Filter>Source\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Public\zstd.h">
+      <Filter>Source\Public\Compression</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Public\MinHook.h">
+      <Filter>Source\Public\MinHook</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Public\zstd_errors.h">
+      <Filter>Source\Public\Compression</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Library Include="Source\Public\minhook.x64.lib">
-      <Filter>Source\Public</Filter>
+      <Filter>Source\Public\MinHook</Filter>
     </Library>
   </ItemGroup>
 </Project>

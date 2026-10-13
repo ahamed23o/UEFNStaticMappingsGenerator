@@ -3,6 +3,7 @@
 #include <fstream>
 #include <filesystem>
 #include "Dumper.h"
+#include "zstd.h"
 
 //credits to Dumper-7: https://github.com/Encryqed/Dumper-7/blob/dd8fe34df8283378a1055386eee195005a100924/Dumper/Generator/Private/Generators/MappingGenerator.cpp 
 class Mappings
@@ -90,6 +91,8 @@ private:
 		Unknown = 0xFF
 	};
 
+	static const EUsmapCompressionMethod CompressionMethod = EUsmapCompressionMethod::ZStandard;
+	
 	EMappingsTypeFlags GetMappingType(Dumper::CompactPropertyData Property);
 
 private:
@@ -102,6 +105,7 @@ private:
 	}
 
 	void GenerateFileHeader(std::stringstream& DataStream);
+	bool GenerateCompressedBuffer(const std::stringstream& DataStream, void*& Buffer, uint32& CompressedSize);
 
 	void GenerateClassOrStructs(Dumper::ClassStructWrapper Wrapper);
 	void GenerateEnum(std::string EnumName, Dumper::CompactEnumData EnumData);

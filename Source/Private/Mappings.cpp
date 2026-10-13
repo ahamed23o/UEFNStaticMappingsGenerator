@@ -115,19 +115,51 @@ void Mappings::GenerateFileHeader(std::stringstream& DataStream)
 	WriteValue(FileOutPut, static_cast<int32>(false));
 
 	/* Write 'CompressionMethod' to the compression byte */
-	WriteValue(FileOutPut, EUsmapCompressionMethod::None);
+	WriteValue(FileOutPut, CompressionMethod);
+
+	uint32 UncompressedBufferSize = DataStream.str().length();
+
+	void* CompressedBuffer = nullptr;
+	uint32 CompressedBufferSize = 0;
+
+	if (!GenerateCompressedBuffer(DataStream, CompressedBuffer, CompressedBufferSize))
+		return;
 
 	/* Write compressed size */
-	WriteValue(FileOutPut, static_cast<uint32>(DataStream.str().length()));
+	WriteValue(FileOutPut, static_cast<uint32>(CompressedBufferSize));
 
 	/* Write uncompressed size */
-	WriteValue(FileOutPut, static_cast<uint32>(DataStream.str().length()));
+	WriteValue(FileOutPut, static_cast<uint32>(UncompressedBufferSize));
 
 	/* Header is done, now write the payload to the file */
-	FileOutPut.write(DataStream.str().c_str(), DataStream.str().length());
+	FileOutPut.write(static_cast<const char*>(CompressedBuffer), CompressedBufferSize);
 	FileOutPut.close();
 
 	std::cout << "Wrote mappings file to: " << (std::filesystem::current_path() / FileName).string() << "\n";
+
+	free(CompressedBuffer);
+}
+
+bool Mappings::GenerateCompressedBuffer(const std::stringstream& DataStream, void*& Buffer, uint32& BufferSize)
+{	
+	switch (CompressionMethod)
+	{
+	case EUsmapCompressionMethod::None:
+		BufferSize = DataStream.str().length();
+
+		Buffer = malloc(BufferSize);
+		memcpy(Buffer, DataStream.str().c_str(), BufferSize);
+		return true;
+	case EUsmapCompressionMethod::ZStandard:
+		BufferSize = ZSTD_compressBound(DataStream.str().length());
+
+		Buffer = malloc(BufferSize);
+		BufferSize = ZSTD_compress(Buffer, BufferSize, DataStream.str().c_str(), DataStream.str().length(), ZSTD_maxCLevel());
+		return true;
+	default:
+		std::cout << "Unsupported compression method!, Will not generete mappings\n";
+		return false;
+	}
 }
 
 void Mappings::GenerateClassOrStructs(Dumper::ClassStructWrapper Wrapper)

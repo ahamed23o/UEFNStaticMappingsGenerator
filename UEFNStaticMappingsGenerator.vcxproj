@@ -84,6 +84,7 @@
     <ClCompile Include="Source\Private\Main.cpp" />
     <ClCompile Include="Source\Private\Mappings.cpp" />
     <ClCompile Include="Source\Private\PE.cpp" />
+    <ClCompile Include="Source\Private\zstd.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Public\Dumper.h" />
@@ -91,6 +92,8 @@
     <ClInclude Include="Source\Public\MinHook.h" />
     <ClInclude Include="Source\Public\PE.h" />
     <ClInclude Include="Source\Public\Utils.h" />
+    <ClInclude Include="Source\Public\zstd.h" />
+    <ClInclude Include="Source\Public\zstd_errors.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="Source\Public\minhook.x64.lib" />
